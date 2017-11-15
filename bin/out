@@ -42,6 +42,7 @@ for repo_name, sha in commit_info:
                "description": config["params"]["description"],
                "state": config["params"]["state"],
                "target_url": target_url}
+    print("setting status of {} sha:{}".format(repo_name, sha), file=sys.stderr)
     status_res = requests.post(endpoint, headers=headers, json=payload)
     if status_res.status_code == 404:
         print("skipping {}".format(repo_name), file=sys.stderr)
@@ -59,7 +60,7 @@ for repo_name, sha in commit_info:
            comment_str = f.read()
         endpoint = os.path.join(gh_api_url, "repos", repo_name, "commits", sha, "comments")
         payload = {"body": comment_str}
-        print("commenting on {}".format(repo_name), file=sys.stderr)
+        print("commenting on {} sha:{}".format(repo_name, sha), file=sys.stderr)
         comment_res = requests.post(endpoint, headers=headers, json=payload)
         if status_res.status_code != requests.codes.created:
             print("comment POST request for repo:{} sha:{} failed with code {}"
